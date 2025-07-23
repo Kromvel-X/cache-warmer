@@ -42,6 +42,9 @@
    - [Git](https://git-scm.com/downloads)
 5. **Телеграм-бот** (создаётся через [@BotFather](https://t.me/BotFather)).
 6. **Ваш `chat_id`** в Telegram.
+7. **Sitemap URL** вашего сайта (например, `https://example.com/sitemap.xml`).
+8. **SSL-сертификат** (будет автоматически получен при первом запуске).
+9. Открытые порты **80** и **443** на сервере.
 
 ---
 
@@ -73,7 +76,7 @@ WEBHOOK_PORT=3000
 > ⚠️ **Важное:**
 > - `DOMAIN` должен быть привязан к серверу заранее!
 > - Сертификат будет автоматически сгенерирован только для указанного домена.
-
+> - При старте выполняется автоматическая установка webhook для бота.
 ---
 
 ### 3. Запуск
@@ -163,6 +166,7 @@ cache-warmer/
 │   ├── nginx.http.conf.template   # Конфигурация для получения сертификата
 │   └── nginx.https.conf.template  # Конфигурация для работы по HTTPS
 ├── logs/                          # Логи прогрева (создаются автоматически)
+│── README.md                      # Этот файл
 └── .env                           # Конфигурация проекта (создаётся вручную)
 ```
 
@@ -172,8 +176,16 @@ cache-warmer/
 
 ### Логи бота:
 
+Все ошибки прогрева сохраняются в папке, указанной в `LOG_DIR`:
+
 ```bash
-docker logs -f cache-warmer
+/root/cache-warmer/logs
+```
+
+Файлы имеют вид:
+
+```
+warm-errors-YYYY-MM-DD-HH-MM-SS.log
 ```
 
 ### Логи Certbot:
@@ -208,6 +220,13 @@ docker compose down
 docker compose up --build -d
 ```
 
+### Перезапуск бота после обновления кода:
+
+```bash
+docker compose down
+docker compose up --build -d
+```
+
 ---
 
 ## 🔐 Автоматическое продление сертификата
@@ -231,9 +250,10 @@ docker logs -f certbot
 
 ## 📜 Лицензия
 
-MIT — можете использовать и дорабатывать.
+The project is distributed under the MIT license.
 
 ---
 
-**Автор:** Вы 😉  
-Если будут вопросы — создайте issue в репозитории.
+**Автор:** 
+
+Author: Nikita Levkovich @kromvelll
