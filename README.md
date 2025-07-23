@@ -51,7 +51,7 @@
 
 ```bash
 git clone https://github.com/Kromvel-X/cache-warmer.git
-cd cache-warmer-bot
+cd cache-warmer
 ```
 
 ---
@@ -153,7 +153,7 @@ docker compose restart
 ## 📂 Структура проекта
 
 ```
-cache-warmer-bot/
+cache-warmer/
 │
 ├── bot.js                         # Основной код Telegram-бота
 ├── cache-warm.js                  # Логика прогрева страниц
