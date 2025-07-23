@@ -170,7 +170,7 @@ bot.launch({
   webhook: {
     domain: process.env.DOMAIN, // Replace with your domain
     path: '/webhook',
-    port: 3000
+    port: process.env.WEBHOOK_PORT
   }
 }).then(() => {
   console.log('🤖 The bot is running and listening for commands...');
