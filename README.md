@@ -65,12 +65,12 @@ cd cache-warmer
 
 ```
 BOT_TOKEN=ВАШ_ТОКЕН_БОТА
-ADMIN_CHAT_ID=ВАШ_CHAT_ID 
+ADMIN_CHAT_ID=ID_АДМИН_ЧАТА_В_КОТОРЫЙ_БУДУТ_ПРИХОДИТЬ_ОТЧЁТЫ
 DOMAIN=your-domain.com
 EMAIL=youremail@example.com
 SITE_MAP_URL=https://your-website.com/sitemap.xml
 LOG_DIR=/root/cache-warmer/logs
-WEBHOOK_PORT=3000
+WEBHOOK_PORT=PORT_ДЛЯ_WEBHOOK
 ```
 
 > ⚠️ **Важное:**
@@ -245,6 +245,33 @@ docker logs -f certbot
 - Дождитесь, пока Certbot завершит генерацию сертификата при первом запуске.
 - Если домен не привязан к серверу, Certbot не сможет получить сертификат.
 - Для тестов можно использовать **staging-сертификаты** (в `docker-compose.yml` добавьте флаг `--staging` для Certbot).
+
+---
+
+## ❓ Часто задаваемые вопросы
+
+### 1. Как бот подключается к Telegram?
+
+При старте выполняется автоматическая установка webhook:
+
+```
+https://<DOMAIN>/webhook
+```
+
+Вручную выполнять `setWebhook` через `curl` **не нужно**.
+
+### 2. Как перенести бота на другой сервер?
+
+- Настройте DNS-домен на новый сервер  
+- Скопируйте проект или заново клонируйте из GitHub  
+- Создайте `.env` с новыми данными  
+- Запустите:
+
+```bash
+docker compose up --build -d
+```
+
+Certbot автоматически сгенерирует новый сертификат.
 
 ---
 
