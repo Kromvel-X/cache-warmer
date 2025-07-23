@@ -13,6 +13,7 @@ import { runCacheWarm } from './cache-warm.js';
 import fs from 'fs';
 import dotenv from 'dotenv';
 
+
 // Load environment variables from .env file
 dotenv.config();
 
@@ -34,6 +35,7 @@ bot.start(
       "Welcome to the Cache Warm-up Bot! \nUse the command /run_cache_warm to start warming up the cache.",
       Markup.keyboard(["/run_cache_warm"]).oneTime().resize(),
       );
+      console.log(`[BOT] User ${ctx.from.id} started the bot.`);
   }
 );
 
@@ -45,7 +47,6 @@ bot.start(
  * @returns {Promise<void>}
 */
 bot.command('run_cache_warm', async (ctx) => {
-  
     const now = Date.now();
     if (isRunning || now - lastRunTimestamp < 5000) { // защита от повторов в 5 секунд
         return await ctx.reply('⚠️  The warm-up is already underway. \nPlease wait for it to finish.');
@@ -135,6 +136,7 @@ bot.command('run_cache_warm', async (ctx) => {
  * @returns {Promise<void>}
  */
 bot.on(message('text'), async (ctx) => {
+  if (ctx.message.text === "/start") return;
   await ctx.reply(
 		"To work with the bot, use the command /run_cache_warm",
 		Markup.keyboard(["/run_cache_warm"]).oneTime().resize(),
@@ -188,7 +190,7 @@ bot.launch({
  * @returns {string} The path to the log file.
 */
 function saveErrorsToLog(errors) {
-  const logDir = './logs'; // Use environment variable or default to './logs'
+  const logDir = process.env.LOG_DIR; // Use environment variable or default to './logs'
   if (!fs.existsSync(logDir)) {
     fs.mkdirSync(logDir, { recursive: true });
   }
