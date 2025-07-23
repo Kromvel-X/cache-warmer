@@ -188,7 +188,7 @@ bot.launch({
  * @returns {string} The path to the log file.
 */
 function saveErrorsToLog(errors) {
-  const logDir = '/root/cachewarmer/logs';
+  const logDir = './logs'; // Use environment variable or default to './logs'
   if (!fs.existsSync(logDir)) {
     fs.mkdirSync(logDir, { recursive: true });
   }
