@@ -16,7 +16,7 @@ The bot supports progress-bar, error logging and sending reports to the administ
 
 ---
 
-## 🖼 Example of work
+## 🖼 Example of output
 
 ```
 🚀 Cache warm-up running
@@ -34,7 +34,7 @@ The bot supports progress-bar, error logging and sending reports to the administ
 
 1. **Server with public IP** (e.g. VPS).
 2. **Domain** (mandatory! The bot works via Webhook and requires HTTPS).
-3. configured DNS (domain must point to your server).
+3. **Properly configured DNS** (your domain must point to your server).
 4. Installed:
    - [Docker](https://docs.docker.com/engine/install/)
    - [Docker Compose](https://docs.docker.com/compose/install/)
@@ -62,7 +62,7 @@ cd cache-warmer
 
 Create a **`.env``** file in the root of the project:
 
-```
+```env
 BOT_TOKEN=YOUR_TOKEN_BOTH
 ADMIN_CHAT_ID=ID_ADMIN_CHAT_WHICH_WILL_RECEIVE_REPORTS
 DOMAIN=example.com
@@ -82,7 +82,7 @@ WEBHOOK_PATH=/yout-webhook-path
 
 ### 3. Start
 
-Start the service:
+Start the containers:
 
 ```bash
 docker compose up --build -d
@@ -108,7 +108,7 @@ In Telegram send:
 /start
 ```
 
-Then run warm up:
+Then run the warm up:
 
 ```
 /run_cache_warm
@@ -116,7 +116,7 @@ Then run warm up:
 
 ---
 
-## 📂 Структура проекта
+## 📂 Project structure
 
 ```
 cache-warmer               
@@ -177,7 +177,7 @@ warm-errors-YYYY-MM-DD-HH-MM-SS.log
 To verify the webhook, use the command:
 
 ```bash
-curl https://api.telegram.org/bot<ВАШ_ТОКЕН>/getWebhookInfo
+curl https://api.telegram.org/bot<YOUR_TOKEN>/getWebhookInfo
 ```
 
 The expected response should contain information about the current webhook, including path and status:
@@ -202,6 +202,4 @@ The project is distributed under the MIT license.
 
 ---
 
-**Автор:** 
-
-Author: Nikita Levkovich https://github.com/Kromvel-X
+**Author:** [Nikita Levkovich](https://github.com/Kromvel-X)
