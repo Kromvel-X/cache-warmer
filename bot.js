@@ -12,16 +12,16 @@ import { message } from 'telegraf/filters'
 import { runCacheWarm } from './cache-warm.js';
 import fs from 'fs';
 import dotenv from 'dotenv';
-
+import express from 'express';
 
 // Load environment variables from .env file
 dotenv.config();
 
 const bot = new Telegraf(process.env.BOT_TOKEN);// Replace with your bot token from BotFather
+const app = express();// Create an Express application to handle webhooks
 const adminChatId = process.env.ADMIN_CHAT_ID; // Replace with your admin chat ID
-
 let isRunning = false;// Flag to check if the warm-up is already running
-let lastRunTimestamp = 0;
+let lastRunTimestamp = 0;// Timestamp of the last run to prevent multiple runs in a short time
 
 /**
  * Handles the /start command.
@@ -161,28 +161,27 @@ bot.catch((err, ctx) => {
   ).catch(() => {});
 });
 
-/** Sets up the webhook for the bot.
- * Comment this out if you want to run the bot without a webhook.
+/**
+ * Sets up the webhook for the bot.
  * The bot will listen for incoming updates at the specified domain and path.
  * The port is set to 3000, which should match your server configuration.
  * @returns {Promise<void>}
- *
-*/
-bot.launch({
-  webhook: {
-    domain: process.env.DOMAIN, // Replace with your domain
-    path: '/webhook',
-    port: process.env.WEBHOOK_PORT
-  }
-}).then(() => {
-  console.log('🤖 The bot is running and listening for commands...');
-}).catch((err) => {
-  console.error('❌ Launch error:', err);
+ */
+app.use(await bot.createWebhook({
+  domain: process.env.DOMAIN,
+  path: '/webhook'
+}));
+
+/**
+ * Handles incoming requests to the webhook path.
+ * It processes the updates received from Telegram.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {void}
+ */
+app.listen(process.env.WEBHOOK_PORT || 3000, '0.0.0.0', () => {
+  console.log(`✅ Express listening on port ${process.env.WEBHOOK_PORT || 3000}`)
 });
-
-
-// Uncomment the line below to run the bot without webhook
-// bot.launch();
 
 /**
  * Saves errors to a log file.

@@ -5,6 +5,8 @@ services:
     restart: always
     env_file:
       - .env
+    expose:
+      - "3000"
     volumes:
       - ./logs:/root/cache-warmer/logs
 
@@ -12,14 +14,17 @@ services:
     image: nginx:latest
     container_name: nginx
     restart: always
+    depends_on:
+      - cache-warmer
     ports:
       - "443:443"
     env_file:
       - .env
     volumes:
-      - ./nginx.conf.template:/etc/nginx/templates/nginx.conf.template:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./nginx/nginx.conf.template:/etc/nginx/nginx.conf.template:ro
     entrypoint: >
-      sh -c "
-        envsubst '$$DOMAIN $$SSL_CERT_PATH $$SSL_CERT_KEY_PATH' < /etc/nginx/templates/nginx.conf.template > /etc/nginx/nginx.conf &&
-        nginx -g 'daemon off;'"
+      sh -c "envsubst '$$DOMAIN $$SSL_CERT_PATH $$SSL_CERT_KEY_PATH' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
+networks:
+  default:
+    name: cache-warmer-network

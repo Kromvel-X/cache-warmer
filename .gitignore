@@ -3,4 +3,3 @@ logs
 *.log
 .env
 .DS_Store
-nginx.conf
