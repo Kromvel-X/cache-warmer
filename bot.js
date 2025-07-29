@@ -90,7 +90,7 @@ bot.command('run_cache_warm', async (ctx) => {
       }
     };
 
-    await ctx.telegram.sendMessage(adminChatId, `User ${userID} ran a cache warmup.`);
+    await ctx.telegram.sendMessage(adminChatId, `User ${userID} running a cache warmup.`);
 
     (async () => {
         try {
