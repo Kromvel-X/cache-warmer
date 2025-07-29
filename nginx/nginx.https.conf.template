@@ -2,16 +2,16 @@ events {}
 
 http {
     server {
-    listen 80;
-    server_name ${DOMAIN};
+        listen 80;
+        server_name ${DOMAIN};
 
-    location /.well-known/acme-challenge/ {
-        root /var/www/certbot;
-    }
+        location /.well-known/acme-challenge/ {
+            root /var/www/certbot;
+        }
 
-    location / {
-        return 301 https://$host$request_uri;
-    }
+        location / {
+            return 301 https://$host$request_uri;
+        }
     }
 
     server {
@@ -22,13 +22,18 @@ http {
         ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
         ssl_protocols TLSv1.2 TLSv1.3;
 
-        location / {
+        # Proxying the bot's webhook
+        location /webhook {
             proxy_pass http://cache-warmer:3000;
             proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection 'upgrade';
             proxy_set_header Host $host;
-            proxy_cache_bypass $http_upgrade;
+        }
+
+        # If you want to open the main (health-check), you can do it this way:
+        location / {
+            return 200 "Cache Warmer Bot is running\n";
         }
     }
 }

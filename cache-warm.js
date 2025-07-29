@@ -73,7 +73,7 @@ async function warmUrls(urls, concurrency, deepWarm, onProgress) {
   let browser;
   try {
     browser = await puppeteer.launch({
-      executablePath: '/usr/bin/chromium-browser',
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
       headless: 'new',
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
@@ -92,7 +92,7 @@ async function warmUrls(urls, concurrency, deepWarm, onProgress) {
     // console.log(successCount);
   
     // Uncomment the following lines to stop after warming up 1 (concurrency)  URLs
-    // if(successCount>=20){
+    // if(successCount>=1){
     //   break;
     // }
     await Promise.all(batch.map(async (url) => {
