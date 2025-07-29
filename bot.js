@@ -168,8 +168,8 @@ bot.catch((err, ctx) => {
  * @returns {Promise<void>}
  */
 app.use(await bot.createWebhook({
-  domain: process.env.DOMAIN,
-  path: '/webhook'
+  domain: process.env.DOMAIN, // Use the domain from environment variables
+  path: process.env.WEBHOOK_PATH, // Use the webhook path from environment variables
 }));
 
 /**

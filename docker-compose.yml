@@ -24,7 +24,7 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - ./nginx/nginx.conf.template:/etc/nginx/nginx.conf.template:ro
     entrypoint: >
-      sh -c "envsubst '$$DOMAIN $$SSL_CERT_PATH $$SSL_CERT_KEY_PATH' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
+      sh -c "envsubst '$$DOMAIN $$SSL_CERT_PATH $$SSL_CERT_KEY_PATH $$WEBHOOK_PATH' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
 networks:
   default:
     name: cache-warmer-network

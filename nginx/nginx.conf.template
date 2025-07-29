@@ -9,7 +9,7 @@ http {
         ssl_certificate_key ${SSL_CERT_KEY_PATH};
         ssl_protocols       TLSv1.2 TLSv1.3;
 
-        location /webhook {
+        location ${WEBHOOK_PATH} {
             proxy_pass http://cache-warmer:3000;
             proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
@@ -18,8 +18,8 @@ http {
             proxy_cache_bypass $http_upgrade;
         }
 
-        location / {
-            return 200 "✅ Cache Warmer Bot is running\n";
+        location /cache-warmer-status {
+            return 200 "Cache Warmer Bot is running\n";
         }
     }
 }
