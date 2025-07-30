@@ -23,21 +23,30 @@ const adminChatId = process.env.ADMIN_CHAT_ID; // Replace with your admin chat I
 let isRunning = false;// Flag to check if the warm-up is already running
 let lastRunTimestamp = 0;// Timestamp of the last run to prevent multiple runs in a short time
 
+bot.use((ctx, next) => {
+  console.log('-------------------------------------');
+  console.log('Update Type:', ctx.updateType);
+  console.log('Update ID:', ctx.update?.update_id);
+  console.log('Message:', ctx.message?.text || '[no message]');
+  return next();
+});
+
 /**
  * Handles the /start command.
- * It sends a welcome message to the user and provides a button to run the cache warm-up.
+ * It sends a welcome message to the user and provides a button to run the cache warm-up
  * @param {Object} ctx - The context object provided by Telegraf.
- * @returns {void}
-*/
-bot.start(
-  async (ctx) => {
-    await ctx.reply(
-      "Welcome to the Cache Warm-up Bot! \nUse the command /run_cache_warm to start warming up the cache.",
-      Markup.keyboard(["/run_cache_warm"]).oneTime().resize(),
-      );
-      console.log(`[BOT] User ${ctx.from.id} started the bot.`);
-  }
-);
+ * @returns {Promise<void>}
+ */
+bot.command("start", async (ctx) => {
+  // Prevent repeated execution if update has already been processed
+  if (!ctx.message || ctx.message.entities?.[0]?.type !== "bot_command") return;
+  console.log(`[BOT] User ${ctx.from.id} explicitly typed /start`);
+
+  await ctx.reply(
+    "Welcome to the Cache Warm-up Bot!\nUse the command /run_cache_warm to start warming up the cache.",
+    Markup.keyboard(["/run_cache_warm"]).oneTime().resize()
+  );
+});
 
 /**
  * Handles the /run_cache_warm command.
@@ -136,7 +145,7 @@ bot.command('run_cache_warm', async (ctx) => {
  * @returns {Promise<void>}
  */
 bot.on(message('text'), async (ctx) => {
-  if (ctx.message.text === "/start") return;
+ if (ctx.message.entities?.some(e => e.type === 'bot_command')) return;
   await ctx.reply(
 		"To work with the bot, use the command /run_cache_warm",
 		Markup.keyboard(["/run_cache_warm"]).oneTime().resize(),
