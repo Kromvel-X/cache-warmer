@@ -71,22 +71,32 @@ async function warmUrls(urls, concurrency, deepWarm, onProgress) {
   // console.log(`Starting warm-up for ${urls.length} URLs with concurrency ${concurrency} and deepWarm=${deepWarm}`);
   const start = getCurrentTime();
   let browser;
+  // Uncomment and configure the proxy settings if needed
+  // const px = {
+  //   host: '198.23.239.134',
+  //   port: 6540,
+  //   user: 'nqorkorq',
+  //   pass: 'tlyr7xirjihn'
+  // };
   try {
     browser = await puppeteer.launch({
       executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
       headless: 'new',
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      args: ['--no-sandbox',
+         '--disable-setuid-sandbox'
+        //`--proxy-server=http://${px.host}:${px.port}` -- uncomment to use proxy
+      ],
     });
   } catch (e) {
     throw new Error(`❌ Critical error: failed to launch the browser: ${e.message}`);
   }
-
   const chunks = chunkArray(urls, concurrency);
   const userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36';
   var successCount = 0;
   let errors = [];
   let processed = 0;
   let total = urls.length;
+  
   
   for (const batch of chunks) {
     // console.log(successCount);
@@ -98,6 +108,13 @@ async function warmUrls(urls, concurrency, deepWarm, onProgress) {
     await Promise.all(batch.map(async (url) => {
       const page = await browser.newPage();
       try {
+
+        // Set up proxy authentication if needed
+        // await page.authenticate({
+        //   username: px.user,
+        //   password: px.pass
+        // });
+
         await page.setUserAgent(userAgent);
         await page.setExtraHTTPHeaders({
           'Accept-Language': 'en-US,en;q=0.9',
